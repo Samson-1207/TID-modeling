@@ -22,8 +22,7 @@ kb_h = kx * bx + ky * by                       # horizontal part of k.b
 
 
 def ion_rates(ms, N0):
-    """Perturbation loss rate L [1/s], ambipolar diffusion coefficient
-    Da [m^2/s] and ion-neutral collision frequency nu_in [1/s]."""
+    
     Tn = ms["Tn"]
     if N0.ndim == 3 and Tn.ndim == 2:
         ms = {k: v[:, None, :] for k, v in ms.items()}
@@ -45,7 +44,7 @@ def ion_rates(ms, N0):
 
 
 def neutral_wind(gw):
-    """Complex neutral wind (uE, uN, uZ) for |u_h| = 1 m/s at z_ref."""
+    
     uh = gw["a"] * np.exp(1j * gw["phi"])
     w = -kh * uh / (gw["m"] + 1j / (2 * gw["H"]))       # anelastic continuity
     Uvec = np.stack([uh * np.sin(az), uh * np.cos(az), w])
@@ -53,7 +52,7 @@ def neutral_wind(gw):
 
 
 def ion_velocity(Uvec, kappa):
-    """Steady ion drift driven by the neutral wind; kappa = Omega_i / nu_in."""
+    
     b = bhat.reshape((3,) + (1,) * (Uvec.ndim - 1))
     Upar = np.sum(Uvec * b, axis=0)
     Uperp = Uvec - Upar * b
@@ -64,8 +63,7 @@ def ion_velocity(Uvec, kappa):
 
 
 def hooke_delta(N0, gw, ms):
-    """Complex relative perturbation dNe/Ne for a 1 m/s wind at z_ref,
-    and the complex horizontal neutral wind."""
+    
     uh, Uvec = neutral_wind(gw)
     m = gw["m"]
     if N0.ndim == 3:

@@ -1,8 +1,3 @@
-"""
-Background ionosphere (PyIRI), neutral atmosphere (pymsis) and the vertical
-structure of a dissipating gravity wave (Hines 1960; Vadas & Fritts 2005).
-All parameters come from config.py.
-"""
 import numpy as np
 from scipy.integrate import cumulative_trapezoid
 import PyIRI
@@ -14,8 +9,6 @@ from config import (yr, mn, dy, F107, F107A, AP, lat0, lon0, kB, g0, RE,
 
 
 def iri_profiles(ut_h, lats, lons, z_km):
-    """IRI electron density [m^-3] with shape (time, location, altitude),
-    plus the F2-layer parameter dictionary (hm, Nm, fo, ...)."""
     F2, F1, E, Es, sun, mag, EDP = ml.IRI_density_1day(
         yr, mn, dy, np.atleast_1d(ut_h).astype(float),
         np.atleast_1d(lons).astype(float), np.atleast_1d(lats).astype(float),
@@ -25,8 +18,7 @@ def iri_profiles(ut_h, lats, lons, z_km):
 
 
 def msis_profiles(ut_h, z_km):
-    """NRLMSIS profiles at (lat0, lon0) with shape (time, altitude).
-    Densities in m^-3, rho in kg m^-3, Tn in K."""
+    
     ut_h = np.atleast_1d(ut_h)
     dates = np.array([np.datetime64(f"{yr:04d}-{mn:02d}-{dy:02d}T00:00")
                       + np.timedelta64(int(round(h * 3600)), "s") for h in ut_h])
@@ -44,9 +36,7 @@ def msis_profiles(ut_h, z_km):
 
 
 def gw_struct(ms, z_km):
-    """Vertical structure of the gravity wave (omega, kh from config) in the
-    MSIS atmosphere: inviscid and dissipative vertical wavenumbers, amplitude
-    and phase normalised at z_ref."""
+
     z = z_km * 1e3
     Tn, rho = ms["Tn"], ms["rho"]
     mono = ms["O"] + ms["HE"] + ms["H"] + ms["AR"] + ms["N"] + ms["ANOMALOUS_O"]
