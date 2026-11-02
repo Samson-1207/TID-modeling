@@ -1,0 +1,9 @@
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.7
+PyIRI>=0.1.7
+pymsis>=0.10
+ppigrf>=1.0
+# notebook and tests
+jupyterlab
+pytest
