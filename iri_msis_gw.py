@@ -4,15 +4,12 @@ import PyIRI
 import PyIRI.main_library as ml
 import pymsis
 
-from config import (yr, mn, dy, F107, F107A, AP, lat0, lon0, kB, g0, RE,
-                    omega, kh, Pr, z_ref)
+from config import (yr, mn, dy, F107, F107A, AP, lat0, lon0, kB, g0, RE, omega, kh, Pr, z_ref)
 
 
 def iri_profiles(ut_h, lats, lons, z_km):
-    F2, F1, E, Es, sun, mag, EDP = ml.IRI_density_1day(
-        yr, mn, dy, np.atleast_1d(ut_h).astype(float),
-        np.atleast_1d(lons).astype(float), np.atleast_1d(lats).astype(float),
-        z_km, F107, PyIRI.coeff_dir, 0)
+    F2, F1, E, Es, sun, mag, EDP = ml.IRI_density_1day(yr, mn, dy, np.atleast_1d(ut_h).astype(float),
+        np.atleast_1d(lons).astype(float), np.atleast_1d(lats).astype(float),z_km, F107, PyIRI.coeff_dir, 0)
     N0 = np.transpose(EDP, (0, 2, 1))
     return np.maximum(N0, 1e6), F2
 
@@ -20,19 +17,16 @@ def iri_profiles(ut_h, lats, lons, z_km):
 def msis_profiles(ut_h, z_km):
     
     ut_h = np.atleast_1d(ut_h)
-    dates = np.array([np.datetime64(f"{yr:04d}-{mn:02d}-{dy:02d}T00:00")
-                      + np.timedelta64(int(round(h * 3600)), "s") for h in ut_h])
+    dates = np.array([np.datetime64(f"{yr:04d}-{mn:02d}-{dy:02d}T00:00") + np.timedelta64(int(round(h * 3600)), "s") for h in ut_h])
     nt = len(dates)
-    out = pymsis.calculate(dates, lon0, lat0, z_km,
-                           f107s=np.full(nt, F107), f107as=np.full(nt, F107A),
-                           aps=np.full((nt, 7), AP))
+    out = pymsis.calculate(dates, lon0, lat0, z_km,f107s=np.full(nt, F107), f107as=np.full(nt, F107A),aps=np.full((nt, 7), AP))
     out = np.nan_to_num(out.reshape(nt, len(z_km), -1))
 
     V = pymsis.Variable
-    d = {k: out[..., getattr(V, k)] for k in
+    ms = {k: out[..., getattr(V, k)] for k in
          ["MASS_DENSITY", "N2", "O2", "O", "HE", "H", "AR", "N", "ANOMALOUS_O", "NO", "TEMPERATURE"]}
-    d["rho"], d["Tn"] = d.pop("MASS_DENSITY"), d.pop("TEMPERATURE")
-    return d
+    ms["rho"], ms["Tn"] = ms.pop("MASS_DENSITY"), ms.pop("TEMPERATURE")
+    return ms
 
 
 def gw_struct(ms, z_km):
@@ -53,7 +47,7 @@ def gw_struct(ms, z_km):
     N2 = g / Tn * (np.gradient(Tn, z, axis=-1) + g / cp)
     wa2 = cs2 / (4 * H ** 2)
     m2 = kh ** 2 * (N2 / omega ** 2 - 1) + (omega ** 2 - wa2) / cs2   # inviscid (Hines 1960)
-    m_inv = -np.sqrt(np.maximum(m2, 1e-14))                            # m < 0: upward energy
+    m_inv = -np.sqrt(m2)                            # m < 0: upward energy
     cgz = -m_inv * omega ** 3 / (kh ** 2 * N2 - omega ** 4 / cs2)
 
     # Dissipative dispersion relation (Vadas & Fritts 2005), q = kh^2 + m^2:
@@ -68,7 +62,7 @@ def gw_struct(ms, z_km):
     comp = np.zeros(Tn.shape + (3, 3), complex)
     comp[..., 0, 0], comp[..., 0, 1], comp[..., 0, 2] = -a2 / a3, -a1 / a3, -a0 / a3
     comp[..., 1, 0] = comp[..., 2, 1] = 1.0
-    roots = np.linalg.eigvals(comp)                       # [..., nz, 3]
+    roots = np.linalg.eigvals(comp)                      
 
     # Follow the gravity-wave branch upward by continuity
     q = np.empty(Tn.shape, complex)
