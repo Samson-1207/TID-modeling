@@ -30,7 +30,6 @@ def msis_profiles(ut_h, z_km):
 
 
 def gw_struct(ms, z_km):
-
     z = z_km * 1e3
     Tn, rho = ms["Tn"], ms["rho"]
     mono = ms["O"] + ms["HE"] + ms["H"] + ms["AR"] + ms["N"] + ms["ANOMALOUS_O"]
@@ -50,8 +49,6 @@ def gw_struct(ms, z_km):
     m_inv = -np.sqrt(m2)                            # m < 0: upward energy
     cgz = -m_inv * omega ** 3 / (kh ** 2 * N2 - omega ** 4 / cs2)
 
-    # Dissipative dispersion relation (Vadas & Fritts 2005), q = kh^2 + m^2:
-    # (omega + i nu q)(omega + i ka q)(q + 1/4H^2) = N^2 kh^2
     nu = 3.34e-7 * Tn ** 0.71 / rho
     ka = nu / Pr
     s = 1 / (4 * H ** 2)
@@ -74,7 +71,7 @@ def gw_struct(ms, z_km):
         prev = q[..., k]
 
     m = np.sqrt(q - kh ** 2)
-    m = np.where(m.imag < 0, -m, m)                       # Im m >= 0: decay upward
+    m = np.where(m.imag < 0, -m, m)                     
     iref = np.argmin(np.abs(z_km - z_ref))
     ln_a_nodamp = -0.5 * np.log(rho)
     lna = ln_a_nodamp - cumulative_trapezoid(m.imag, z, axis=-1, initial=0)

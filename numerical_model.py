@@ -1,8 +1,3 @@
-"""
-Hooke (1968) TID model: ion response to a gravity-wave neutral wind in the
-geomagnetic field, with chemical loss and field-aligned ambipolar diffusion.
-All parameters come from config.py.
-"""
 import numpy as np
 from scipy.ndimage import gaussian_filter1d
 import ppigrf
@@ -76,6 +71,6 @@ def hooke_delta(N0, gw, ms):
     lnN0_s = gaussian_filter1d(np.log(N0), smooth_km / (altF[1] - altF[0]), axis=-1, mode="nearest")
     dlnN0 = np.gradient(lnN0_s, dz, axis=-1)
     kpar = kb_h + m.real * bz
-    denom = -1j * omega + (L if recomb_loss else 0) + (Da * kpar ** 2 if diff else 0)
+    denom = -1j * omega + L + Da * kpar ** 2
     delta_hat = -((1j * (kx * vi[0] + ky * vi[1]) + dvz) + vi[2] * dlnN0) / denom
     return delta_hat, uh

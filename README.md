@@ -72,16 +72,16 @@ in `config.py`, then restart the kernel and run all cells.
 
 ## Assumptions and limitations
 
-- Linear, monochromatic plane wave; WKB vertical structure (the |m|^½ refraction factor is omitted).
+- WKB vertical structure (the |m|^½ refraction factor is omitted).
 - Neutral atmosphere taken from MSIS at the site only (horizontally uniform).
-- No electric fields (polarisation or high-latitude convection), no particle precipitation,
+- No electric fields (polarization or high-latitude convection), no particle precipitation,
   no production term, no wave-induced neutral composition changes.
 - The wind amplitude is rescaled at every time step so that |δNe/Ne| = `amp_Fpeak` at hmF2.
 
 ## References
 
-- Hooke, W. H. (1968), Ionospheric irregularities produced by internal atmospheric gravity waves, *J. Atmos. Terr. Phys.*, 30, 795–823.
-- Hines, C. O. (1960), Internal atmospheric gravity waves at ionospheric heights, *Can. J. Phys.*, 38, 1441–1481.
-- Vadas, S. L., & Fritts, D. C. (2005), Thermospheric responses to gravity waves: Influences of increasing viscosity and thermal diffusivity, *J. Geophys. Res.*, 110, D15103.
-- Schunk, R. W., & Nagy, A. F. (2009), *Ionospheres: Physics, Plasma Physics, and Chemistry*, Cambridge University Press.
-- PyIRI: https://github.com/victoriyaforsythe/PyIRI · pymsis: https://github.com/SWxTREC/pymsis · ppigrf: https://github.com/IAGA-VMOD/ppigrf
+- Hooke, W. H. (1968), Ionospheric irregularities produced by internal atmospheric gravity waves, J. Atmos. Terr. Phys., 30, 795–823.
+- Vadas, S. L., & Fritts, D. C. (2005), Thermospheric responses to gravity waves: Influences of increasing viscosity and thermal diffusivity,J. Geophys. Res., 110, D15103.
+- PyIRI: https://github.com/victoriyaforsythe/PyIRI
+- Pymsis: https://github.com/SWxTREC/pymsis
+- Pigrf: https://github.com/IAGA-VMOD/ppigrf

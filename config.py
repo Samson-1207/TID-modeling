@@ -1,12 +1,8 @@
-"""
-Single source of all model parameters.
-"""
 import numpy as np
 from datetime import datetime, timedelta, timezone
 
-# ---------------------------------------------------------------------------
 # Site, date and space-weather drivers
-# ---------------------------------------------------------------------------
+
 lat0, lon0 = 69.12, 20.0          # Tromsø / EISCAT [deg N, deg E]
 yr, mn, dy = 2020, 12, 8          # date
 F107, F107A, AP = 82.4, 85.4, 4   # daily F10.7, 81-day mean F10.7, Ap
@@ -30,9 +26,9 @@ period = 40            # mstid period
 lambda_h = 200         # horizontal wavelength
 azimuth = 170          # propagation azimuth
 amp_Fpeak = 0.1        # 10%  imposed at hmF2
-z_ref = 250            # reference altitude for wind amplitude and phase explanation
+z_ref = 250            # reference altitude
 
-# AGW-plasma paraeters
+# AGW-plasma parameters
 
 recomb_loss = True     
 diff = True           
@@ -41,7 +37,6 @@ TiOverTn = 1
 Pr = 0.7               
 smooth_km = 5         
 
-fradar = 224e6         # radar frequency [Hz] (EISCAT VHF)
 
 # Constants
 
@@ -55,8 +50,8 @@ m_Op = 16 * amu
 
 # Derived wave quantities
 
-omega = 2 * np.pi / (period * 60)          # [rad/s]
-kh = 2 * np.pi / (lambda_h * 1e3)          # [rad/m]
+omega = 2 * np.pi / (period * 60)         
+kh = 2 * np.pi / (lambda_h * 1e3)         
 az = np.deg2rad(azimuth)
 kx, ky = kh * np.sin(az), kh * np.cos(az)  # x = east, y = north
-c_phase = omega / kh                        # horizontal phase speed [m/s]
+c_phase = omega / kh                        # horizontal phase speed [m/s
